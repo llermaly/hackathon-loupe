@@ -130,3 +130,5 @@ dmypy.json
 
 # Env variables
 secrets.toml
+
+tmp
