@@ -128,4 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.streamlit/secrets.toml
+# Env variables
+secrets.toml
