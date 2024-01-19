@@ -4,53 +4,71 @@ from clarifai.client.auth.helper import ClarifaiAuthHelper
 from clarifai.client.user import User
 from clarifai.modules.css import ClarifaiStreamlitCSS
 from google.protobuf import json_format, timestamp_pb2
+import time
+import pandas as pd
 
 st.set_page_config(layout="wide")
 ClarifaiStreamlitCSS.insert_default_css(st)
+
 
 # This must be within the display() function.
 auth = ClarifaiAuthHelper.from_streamlit(st)
 stub = create_stub(auth)
 userDataObject = auth.get_user_app_id_proto()
 
-st.title("Simple example to list inputs")
+# Remove form border and padding styles
+css = r"""
+    <style>
+        [data-testid="stForm"] {border: 0px;padding:0px}
+    </style>
+"""
+st.markdown(css, unsafe_allow_html=True)
 
-with st.form(key="data-inputs"):
-  mtotal = st.number_input(
-      "Select number of inputs to view in a table:", min_value=5, max_value=100)
-  submitted = st.form_submit_button('Submit')
+
+st.title("New analysis")
+
+with st.form(key="analysis"):
+    site_url = st.text_input(
+        "Site URL", value="https://samples.clarifai.com/metro-north.jpg"
+    )
+    submitted = st.form_submit_button("Generate Report")
 
 if submitted:
-  if mtotal is None or mtotal == 0:
-    st.warning("Number of inputs must be provided.")
-    st.stop()
-  else:
-    st.write("Number of inputs in table will be: {}".format(mtotal))
+    with st.spinner("Extracting logo from site..."):
+        time.sleep(3)
+        st.image("./logo.png")
+        st.write(site_url)
 
-  # Stream inputs from the app. list_inputs give list of dictionaries with inputs and its metadata .
-  input_obj = User(user_id=userDataObject.user_id).app(app_id=userDataObject.app_id).inputs()
-  all_inputs = list(input_obj.list_inputs())
+    with st.spinner("Generating site summary..."):
+        time.sleep(3)
+        st.image("./site.png", width=500)
+        st.subheader("Site summary")
+        st.write(
+            """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque at ipsum vitae mi vestibulum convallis. Fusce scelerisque faucibus tellus a porta. Proin gravida, est vitae suscipit sodales, erat libero auctor quam, non porta mi urna eu risus. Maecenas est libero, vehicula laoreet massa eu, condimentum lobortis orci. Phasellus quam orci, accumsan vitae condimentum et, accumsan vel lectus. Aliquam non vulputate nisi, quis mattis odio. Nulla facilisi. Donec quis pellentesque neque. Curabitur sed maximus tortor, nec pulvinar nulla. Integer id odio blandit, elementum ex ac, efficitur nulla."""
+        )
 
-  #Check for no of inputs in the app and compare it with no of inputs to be displayed.
-  if len((all_inputs)) < (mtotal):
-    raise Exception(
-        f"No of inputs is less than {mtotal}. Please add more inputs or reduce the inputs to be displayed !"
-    )
+    with st.spinner("Analyzing current state..."):
+        time.sleep(3)
+        st.image("./site.png", width=500)
+        st.subheader("Current state")
+        st.write(
+            """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque at ipsum vitae mi vestibulum convallis. Fusce scelerisque faucibus tellus a porta. Proin gravida, est vitae suscipit sodales, erat libero auctor quam, non porta mi urna eu risus. Maecenas est libero, vehicula laoreet massa eu, condimentum lobortis orci. Phasellus quam orci, accumsan vitae condimentum et, accumsan vel lectus. Aliquam non vulputate nisi, quis mattis odio. Nulla facilisi. Donec quis pellentesque neque. Curabitur sed maximus tortor, nec pulvinar nulla. Integer id odio blandit, elementum ex ac, efficitur nulla."""
+        )
 
-  else:
-    data = []
-    #added "data_url" which gives the url of the input.
-    for inp in range(mtotal):
-      data_url = all_inputs[inp].data.image.url
-      if len(data_url) < 1:
-        data_url= all_inputs[inp].data.text.url
-      data.append({
-          "id": all_inputs[inp].id,
-          "data_url": data_url,
-          "status": all_inputs[inp].status.description,
-          "created_at": timestamp_pb2.Timestamp.ToDatetime(all_inputs[inp].created_at),
-          "modified_at": timestamp_pb2.Timestamp.ToDatetime(all_inputs[inp].modified_at),
-          "metadata": json_format.MessageToDict(all_inputs[inp].data.metadata),
-      })
+    with st.spinner("Generating results..."):
+        time.sleep(3)
+        df = pd.DataFrame(
+            columns=["Item", "Pass"],
+            data=[
+                ["Item 1", "Yes"],
+                ["Item 2", "Yes"],
+                ["Item 3", "No"],
+                ["Item 4", "No"],
+            ],
+        )
+        st.subheader("Analysis results")
+        st.table(df)
 
-  st.dataframe(data)
+        st.subheader("Listen to cold call")
+        st.audio("./audio.mp3", format="audio/wav", start_time=0, sample_rate=None)
+        st.button("Download deck")
