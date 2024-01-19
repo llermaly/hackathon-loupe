@@ -12,9 +12,9 @@ ClarifaiStreamlitCSS.insert_default_css(st)
 
 
 # This must be within the display() function.
-auth = ClarifaiAuthHelper.from_streamlit(st)
-stub = create_stub(auth)
-userDataObject = auth.get_user_app_id_proto()
+#auth = ClarifaiAuthHelper.from_streamlit(st)
+#stub = create_stub(auth)
+#userDataObject = auth.get_user_app_id_proto()
 
 # Remove form border and padding styles
 css = r"""
@@ -23,7 +23,6 @@ css = r"""
     </style>
 """
 st.markdown(css, unsafe_allow_html=True)
-
 
 st.title("New analysis")
 
