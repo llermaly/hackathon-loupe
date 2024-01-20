@@ -10,6 +10,8 @@ python = "^3.11"
 clarifai = "^10.0.0"
 streamlit = "^1.30.0"
 tarsier = "^0.5.6"
+llama-index = "^0.9.34"
+pydantic = "^2.5.3"
 
 
 [build-system]
