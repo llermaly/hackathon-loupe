@@ -4,13 +4,13 @@ import os
 
 import streamlit as st
 
-from slides_core.ai_requests import get_analysis, get_audio, get_image
-from slides_core.google_requests import (
+from core.slides.ai_requests import get_analysis, get_audio, get_image
+from core.slides.google_requests import (
     dup_slide,
     replace_slides_elements,
     upload_file_to_drive,
 )
-from slides_core.utils import get_audio_prompt, get_requests_arr, get_text_prompt
+from core.slides.utils import get_audio_prompt, get_requests_arr, get_text_prompt
 
 st.title("Slides page")
 
