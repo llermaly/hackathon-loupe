@@ -15,6 +15,7 @@ def get_analysis(prompt, model):
     try:
         inference_params = dict(
             temperature=0.2,
+            max_tokens=290,
         )
 
         model_prediction = Model(

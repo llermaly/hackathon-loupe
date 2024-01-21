@@ -56,7 +56,7 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
 
     image_intro = {
         "replaceAllShapesWithImage": {
-            "imageUrl": json_data["main_screenshot"],
+            "imageUrl": images_url_arr[2],
             "replaceMethod": "CENTER_INSIDE",
             "containsText": {"text": "{{IMAGE_INTRO}}"},
         }
@@ -130,31 +130,31 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
         }
     }
 
-    table_typo_tolerance = {
-        "replaceAllText": {
-            "containsText": {"text": "{{TABLE_TYPO_TOLERANCE}}"},
-            "replaceText": get_yes_or_no(json_data["features"]["typo_tolerance"]),
-        }
-    }
+    # table_typo_tolerance = {
+    #     "replaceAllText": {
+    #         "containsText": {"text": "{{TABLE_TYPO_TOLERANCE}}"},
+    #         "replaceText": get_yes_or_no(json_data["features"]["typo_tolerance"]),
+    #     }
+    # }
 
-    point3 = {
-        "replaceAllShapesWithImage": {
-            "imageUrl": get_red_green(json_data["features"]["typo_tolerance"]),
-            "replaceMethod": "CENTER_INSIDE",
-            "containsText": {"text": "{{POINT3}}"},
-        }
-    }
+    # point3 = {
+    #     "replaceAllShapesWithImage": {
+    #         "imageUrl": get_red_green(json_data["features"]["typo_tolerance"]),
+    #         "replaceMethod": "CENTER_INSIDE",
+    #         "containsText": {"text": "{{POINT3}}"},
+    #     }
+    # }
 
     table_title_search = {
         "replaceAllText": {
             "containsText": {"text": "{{TABLE_TITLE_SEARCH}}"},
-            "replaceText": get_yes_or_no(json_data["features"]["title_search"]),
+            "replaceText": get_yes_or_no(json_data["features"]["search"]),
         }
     }
 
     point4 = {
         "replaceAllShapesWithImage": {
-            "imageUrl": get_red_green(json_data["features"]["title_search"]),
+            "imageUrl": get_red_green(json_data["features"]["search"]),
             "replaceMethod": "CENTER_INSIDE",
             "containsText": {"text": "{{POINT4}}"},
         }
@@ -163,13 +163,13 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
     table_desc_search = {
         "replaceAllText": {
             "containsText": {"text": "{{TABLE_DESC_SEARCH}}"},
-            "replaceText": get_yes_or_no(json_data["features"]["desc_search"]),
+            "replaceText": get_yes_or_no(json_data["features"]["description"]),
         }
     }
 
     point5 = {
         "replaceAllShapesWithImage": {
-            "imageUrl": get_red_green(json_data["features"]["desc_search"]),
+            "imageUrl": get_red_green(json_data["features"]["description"]),
             "replaceMethod": "CENTER_INSIDE",
             "containsText": {"text": "{{POINT5}}"},
         }
@@ -269,7 +269,7 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
     return [
         company_name,
         date,
-        logo,
+        # logo,
         intro_text,
         image_intro,
         current_state,
@@ -281,8 +281,8 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
         point1,
         table_autocomplete,
         point2,
-        table_typo_tolerance,
-        point3,
+        # table_typo_tolerance,
+        # point3,
         table_title_search,
         point4,
         table_desc_search,

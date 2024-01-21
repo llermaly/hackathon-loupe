@@ -20,27 +20,48 @@ id = url.replace("http://", "").replace("https://", "")
 if os.path.exists("./tmp/audio.wav"):
     os.remove("./tmp/audio.wav")
 
-initial_json = """{
-    "company_name": "Clarifai",
-    "website": "https://clarifai.com",
-    "content": "The LLM/GENERATIVE AI/FULL STACK/COMPUTER VISION Build on the fastest, production-grade deep learning platform for developers and ML engineers.",
-    "logo": "https://img.freepik.com/psd-gratis/logo-gradiente-abstracto_23-2150689648.jpg?w=740&t=st=1705693169~exp=1705693769~hmac=d5aec7d0900982211c119cfeccea92257d2a92ea2b91aa8243ac85168fa77278",
-    "main_screenshot": "https://i.ytimg.com/vi/AKnpqlVJ0Wg/0.jpg",
+# initial_json = """{
+#     "company_name": "Clarifai",
+#     "website": "https://clarifai.com",
+#     "content": "The LLM/GENERATIVE AI/FULL STACK/COMPUTER VISION Build on the fastest, production-grade deep learning platform for developers and ML engineers.",
+#     "logo": "https://img.freepik.com/psd-gratis/logo-gradiente-abstracto_23-2150689648.jpg?w=740&t=st=1705693169~exp=1705693769~hmac=d5aec7d0900982211c119cfeccea92257d2a92ea2b91aa8243ac85168fa77278",
+#     "main_screenshot": "https://i.ytimg.com/vi/AKnpqlVJ0Wg/0.jpg",
+#     "features": {
+#         "search": true,
+#         "typo_tolerance": false,
+#         "title_search": false,
+#         "desc_search": false,
+#         "autocomplete": true,
+#         "highlighting": true,
+#         "thumbnails": false,
+#         "filters": false,
+#         "sorting": false,
+#         "pagination": false
+#     }
+# }
+
+# """
+
+
+initial_json = {
+    "website": "https://www.k12.com",
+    "company_name": "k12",
+    "logo": "https://www.k12.com/wp-content/themes/pl-scaffold-theme/dist/images/logo_new.svg",
+    "content": "The website offers online education programs for children from kindergarten through career. It provides a flexible and personalized approach to learning, with options for virtual public schools, one-on-one tutoring, private elementary schools, and individual courses for homeschoolers. The programs are designed to be safe, fun, and challenging, with opportunities for students to participate in esports, join clubs, and access learning resources. The website also includes information for parents, career and college prep, and business education. Enrollment is open, and the website offers resources to help families get started.",
+    "main_screenshot": "tmp/k12_initial.png",
+    "results_screenshot": "tmp/k12_results_screenshot_small.png",
     "features": {
-        "search": true,
-        "typo_tolerance": false,
-        "title_search": false,
-        "desc_search": false,
-        "autocomplete": true,
-        "highlighting": true,
-        "thumbnails": false,
-        "filters": false,
-        "sorting": false,
-        "pagination": false
-    }
+        "search": False,
+        "description": False,
+        "highlighting": False,
+        "thumbnails": False,
+        "filters": False,
+        "sorting": False,
+        "pagination": False,
+        "autocomplete": False,
+    },
 }
 
-"""
 
 # Create a form to receive user input
 with st.form(key="my_form"):
