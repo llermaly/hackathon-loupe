@@ -14,12 +14,20 @@ def get_yes_or_no(affirmation):
         return "NO"
 
 
-def get_requests_arr(ai_json_data, json_data):
+def get_red_green(affirmation):
+    if affirmation == True:
+        return "https://drive.google.com/uc?export=download&id=1sQrhETFfOoRtSt5DzkrcwJDhTIGsmY73"
+
+    if affirmation == False:
+        return "https://drive.google.com/uc?export=download&id=154tYFve8p8lhVOPkKN3_GEJ3Zha7Ai1e"
+
+
+def get_requests_arr(ai_json_data, json_data, image_url):
     ### FIRST SLIDE ###
     company_name = {
         "replaceAllText": {
             "containsText": {"text": "{{COMPANY_NAME}}"},
-            "replaceText": json_data["website"],
+            "replaceText": json_data["company_name"],
         }
     }
 
@@ -91,10 +99,26 @@ def get_requests_arr(ai_json_data, json_data):
         }
     }
 
+    point1 = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": get_red_green(json_data["features"]["search"]),
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{POINT1}}"},
+        }
+    }
+
     table_autocomplete = {
         "replaceAllText": {
             "containsText": {"text": "{{TABLE_AUTOCOMPLETE}}"},
             "replaceText": get_yes_or_no(json_data["features"]["autocomplete"]),
+        }
+    }
+
+    point2 = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": get_red_green(json_data["features"]["autocomplete"]),
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{POINT2}}"},
         }
     }
 
@@ -105,10 +129,26 @@ def get_requests_arr(ai_json_data, json_data):
         }
     }
 
+    point3 = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": get_red_green(json_data["features"]["typo_tolerance"]),
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{POINT3}}"},
+        }
+    }
+
     table_title_search = {
         "replaceAllText": {
             "containsText": {"text": "{{TABLE_TITLE_SEARCH}}"},
             "replaceText": get_yes_or_no(json_data["features"]["title_search"]),
+        }
+    }
+
+    point4 = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": get_red_green(json_data["features"]["title_search"]),
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{POINT4}}"},
         }
     }
 
@@ -119,10 +159,26 @@ def get_requests_arr(ai_json_data, json_data):
         }
     }
 
+    point5 = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": get_red_green(json_data["features"]["desc_search"]),
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{POINT5}}"},
+        }
+    }
+
     table_highlighting = {
         "replaceAllText": {
             "containsText": {"text": "{{TABLE_HIGHLIGHT}}"},
             "replaceText": get_yes_or_no(json_data["features"]["highlighting"]),
+        }
+    }
+
+    point6 = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": get_red_green(json_data["features"]["highlighting"]),
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{POINT6}}"},
         }
     }
 
@@ -133,10 +189,26 @@ def get_requests_arr(ai_json_data, json_data):
         }
     }
 
+    point7 = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": get_red_green(json_data["features"]["thumbnails"]),
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{POINT7}}"},
+        }
+    }
+
     table_filters = {
         "replaceAllText": {
             "containsText": {"text": "{{TABLE_FILTERS}}"},
             "replaceText": get_yes_or_no(json_data["features"]["filters"]),
+        }
+    }
+
+    point8 = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": get_red_green(json_data["features"]["filters"]),
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{POINT8}}"},
         }
     }
 
@@ -147,10 +219,26 @@ def get_requests_arr(ai_json_data, json_data):
         }
     }
 
+    point9 = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": get_red_green(json_data["features"]["sorting"]),
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{POINT9}}"},
+        }
+    }
+
     table_pagination = {
         "replaceAllText": {
             "containsText": {"text": "{{TABLE_PAGINATION}}"},
             "replaceText": get_yes_or_no(json_data["features"]["pagination"]),
+        }
+    }
+
+    point10 = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": get_red_green(json_data["features"]["pagination"]),
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{POINT10}}"},
         }
     }
 
@@ -159,6 +247,14 @@ def get_requests_arr(ai_json_data, json_data):
         "replaceAllText": {
             "containsText": {"text": "{{CONCLUSION}}"},
             "replaceText": ai_json_data["conclusion"],
+        }
+    }
+
+    image_conclusion = {
+        "replaceAllShapesWithImage": {
+            "imageUrl": image_url,
+            "replaceMethod": "CENTER_INSIDE",
+            "containsText": {"text": "{{IMAGE_CONCLUSION}}"},
         }
     }
 
@@ -172,20 +268,32 @@ def get_requests_arr(ai_json_data, json_data):
         problem1,
         problem2,
         problem3,
-        conclusion,
         table_search,
+        point1,
         table_autocomplete,
+        point2,
         table_typo_tolerance,
+        point3,
         table_title_search,
+        point4,
         table_desc_search,
+        point5,
         table_highlighting,
+        point6,
         table_thumbnails,
+        point7,
         table_filters,
+        point8,
         table_sorting,
+        point9,
         table_pagination,
+        point10,
+        conclusion,
+        image_conclusion,
     ]
 
 
+### METHOD FOR TESTING ###
 def get_json_data():
     return {
         "company_name": "Clarifai",

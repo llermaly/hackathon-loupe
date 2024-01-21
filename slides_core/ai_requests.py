@@ -10,14 +10,14 @@ os.environ["CLARIFAI_PAT"] = st.secrets["CLARIFAI_PAT"]
 PAT = os.environ["CLARIFAI_PAT"]
 
 
-def get_analysis(prompt):
+def get_analysis(prompt, model):
     inference_params = dict(
         temperature=0.2,
         max_tokens=290,
     )
 
     model_prediction = Model(
-        "https://clarifai.com/openai/chat-completion/models/GPT-4"
+        f"https://clarifai.com/openai/chat-completion/models/{model}"
     ).predict_by_bytes(
         prompt.encode(), input_type="text", inference_params=inference_params
     )
