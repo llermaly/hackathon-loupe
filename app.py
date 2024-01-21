@@ -201,8 +201,8 @@ if submitted:
         )
 
         new_slides = dup_slide(
-            slides_id="14LonsLtskFIBW-unrhO6Olq3EU08oi_o-Ciie0mchXk",
-            slides_name=f"delete-{state['company_name']}",
+            slides_id="1WEZv17oAMb_Hj6MvS_tZVpo5JlGlgmgjnEeiLkHWeMU",
+            slides_name=f"{state['company_name']}-deck",
             folder_id="15sY21eZwH8ycxHFzfAQZucbL7W5obdYm",
         )
 
