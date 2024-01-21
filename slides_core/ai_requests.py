@@ -1,4 +1,5 @@
 import os
+import uuid
 
 import streamlit as st
 from clarifai.client.model import Model
@@ -11,76 +12,90 @@ PAT = os.environ["CLARIFAI_PAT"]
 
 
 def get_analysis(prompt, model):
-    inference_params = dict(
-        temperature=0.2,
-        max_tokens=290,
-    )
+    try:
+        inference_params = dict(
+            temperature=0.2,
+            max_tokens=290,
+        )
 
-    model_prediction = Model(
-        f"https://clarifai.com/openai/chat-completion/models/{model}"
-    ).predict_by_bytes(
-        prompt.encode(), input_type="text", inference_params=inference_params
-    )
+        model_prediction = Model(
+            f"https://clarifai.com/openai/chat-completion/models/{model}"
+        ).predict_by_bytes(
+            prompt.encode(), input_type="text", inference_params=inference_params
+        )
 
-    return model_prediction.outputs[0].data.text.raw
+        return model_prediction.outputs[0].data.text.raw
+    except Exception as e:
+        print("Error getting analysis: " + e)
 
 
 def get_image(prompt):
-    inference_params = dict(quality="standard", size="1024x1024")
+    try:
+        inference_params = dict(quality="standard", size="1024x1024")
 
-    model_prediction = Model(
-        "https://clarifai.com/openai/dall-e/models/dall-e-3"
-    ).predict_by_bytes(
-        prompt.encode(), input_type="text", inference_params=inference_params
-    )
+        model_prediction = Model(
+            "https://clarifai.com/openai/dall-e/models/dall-e-3"
+        ).predict_by_bytes(
+            prompt.encode(), input_type="text", inference_params=inference_params
+        )
 
-    output_base64 = model_prediction.outputs[0].data.image.base64
+        output_base64 = model_prediction.outputs[0].data.image.base64
 
-    directory = "tmp"
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+        directory = "tmp"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
 
-    with open(f"{directory}/image.png", "wb") as f:
-        f.write(output_base64)
+        filename = "image_" + str(uuid.uuid4()) + ".png"
+        path = os.path.join(directory, filename)
+
+        with open(path, "wb") as f:
+            f.write(output_base64)
+
+        return path
+    except Exception as e:
+        print("Error getting image: " + e)
 
 
 def get_audio(prompt):
-    USER_ID = "openai"
-    APP_ID = "tts"
-    MODEL_ID = "openai-tts-1"
+    try:
+        USER_ID = "openai"
+        APP_ID = "tts"
+        MODEL_ID = "openai-tts-1"
 
-    channel = ClarifaiChannel.get_grpc_channel()
-    stub = service_pb2_grpc.V2Stub(channel)
+        channel = ClarifaiChannel.get_grpc_channel()
+        stub = service_pb2_grpc.V2Stub(channel)
 
-    metadata = (("authorization", "Key " + PAT),)
+        metadata = (("authorization", "Key " + PAT),)
 
-    userDataObject = resources_pb2.UserAppIDSet(user_id=USER_ID, app_id=APP_ID)
+        userDataObject = resources_pb2.UserAppIDSet(user_id=USER_ID, app_id=APP_ID)
 
-    post_model_outputs_response = stub.PostModelOutputs(
-        service_pb2.PostModelOutputsRequest(
-            user_app_id=userDataObject,
-            model_id=MODEL_ID,
-            inputs=[
-                resources_pb2.Input(
-                    data=resources_pb2.Data(text=resources_pb2.Text(raw=prompt))
-                )
-            ],
-        ),
-        metadata=metadata,
-    )
-
-    if post_model_outputs_response.status.code != status_code_pb2.SUCCESS:
-        print(post_model_outputs_response.status)
-        raise Exception(
-            "Post model outputs failed, status: "
-            + post_model_outputs_response.status.description
+        post_model_outputs_response = stub.PostModelOutputs(
+            service_pb2.PostModelOutputsRequest(
+                user_app_id=userDataObject,
+                model_id=MODEL_ID,
+                inputs=[
+                    resources_pb2.Input(
+                        data=resources_pb2.Data(text=resources_pb2.Text(raw=prompt))
+                    )
+                ],
+            ),
+            metadata=metadata,
         )
 
-    output_base64 = post_model_outputs_response.outputs[0].data.audio.base64
+        if post_model_outputs_response.status.code != status_code_pb2.SUCCESS:
+            print(post_model_outputs_response.status)
+            raise Exception(
+                "Post model outputs failed, status: "
+                + post_model_outputs_response.status.description
+            )
 
-    directory = "tmp"
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+        output_base64 = post_model_outputs_response.outputs[0].data.audio.base64
 
-    with open(f"{directory}/audio.wav", "wb") as f:
-        f.write(output_base64)
+        directory = "tmp"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        with open(f"{directory}/audio.wav", "wb") as f:
+            f.write(output_base64)
+    except Exception as e:
+        print("Error getting audio: " + e)
