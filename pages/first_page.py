@@ -38,32 +38,31 @@ with st.form(key="analysis"):
     )
     submitted = st.form_submit_button("Start Analysis")
 
-state = {
-    "website": "https://www.k12.com",
-    "company_name": "k12",
-    "logo": "https://www.k12.com/wp-content/themes/pl-scaffold-theme/dist/images/logo_new.svg",
-    "features": {
-        "search": True,
-        "typo_tolerance": False,
-        "title_search": False,
-        "desc_search": False,
-        "autocomplete": True,
-        "highlighting": True,
-        "thumbnails": False,
-        "filters": False,
-        "sorting": False,
-        "pagination": False
-    },
-    "content": "The website offers online learning programs for students from kindergarten through career prep. It provides a flexible and personalized approach to education for parents and students seeking a safer and more engaging learning experience. The programs include virtual public schools, one-on-one tutoring, private elementary schools, esports, and individual courses for homeschoolers. K12 also offers resources like the Strider Activity Hub and K12 Zone for interactive learning and social activities. The website emphasizes the importance of choice, flexibility, and personalized learning in education and offers enrollment options, FAQs, and contact information for those interested in learning more.",
-    "main_screenshot": "tmp/k12_initial.png",
-    "results_screenshot": "tmp/k12_results_screenshot_small.png"
-}
+# state = {
+#     "website": "https://www.k12.com",
+#     "company_name": "k12",
+#     "logo": "https://www.k12.com/wp-content/themes/pl-scaffold-theme/dist/images/logo_new.svg",
+#     "features": {
+#         "search": True,
+#         "typo_tolerance": False,
+#         "title_search": False,
+#         "desc_search": False,
+#         "autocomplete": True,
+#         "highlighting": True,
+#         "thumbnails": False,
+#         "filters": False,
+#         "sorting": False,
+#         "pagination": False
+#     },
+#     "content": "The website offers online learning programs for students from kindergarten through career prep. It provides a flexible and personalized approach to education for parents and students seeking a safer and more engaging learning experience. The programs include virtual public schools, one-on-one tutoring, private elementary schools, esports, and individual courses for homeschoolers. K12 also offers resources like the Strider Activity Hub and K12 Zone for interactive learning and social activities. The website emphasizes the importance of choice, flexibility, and personalized learning in education and offers enrollment options, FAQs, and contact information for those interested in learning more.",
+#     "main_screenshot": "tmp/k12_initial.png",
+#     "results_screenshot": "tmp/k12_results_screenshot_small.png"
+# }
 
 if submitted:
     with st.spinner("Analyzing website"):
         id = site_url.split(".")[1]
-        # state = asyncio.run(navigate_website(site_url, id))
-        st.write(state)
+        state = asyncio.run(navigate_website(site_url, id))
         st.header(f"🔍😎 Analysis of {state['website']}")
         col1, col2 = st.columns(2)
 
