@@ -131,6 +131,6 @@ dmypy.json
 # Env variables
 secrets.toml
 
-tmp
+tmp/*
 data/*
 .DS_Store
