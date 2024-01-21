@@ -13,7 +13,7 @@ async def navigate_website(url: str, id: str):
     state = {}
 
     state['website'] = url
-    state['id'] = id
+    state['company_name'] = id
 
     # TODO: Build function to extract logo
     state['logo'] = "https://www.k12.com/wp-content/themes/pl-scaffold-theme/dist/images/logo_new.svg"
