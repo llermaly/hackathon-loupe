@@ -10,4 +10,4 @@
 
 1. `poetry install` 
 2. `poetry shell` 
-3. `streamlit run main.py`
+3. `streamlit run Home.py`
