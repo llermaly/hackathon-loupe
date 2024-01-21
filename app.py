@@ -42,7 +42,8 @@ st.markdown(
 with st.form(key="analysis"):
     site_url = st.text_input("Site URL", value="https://www.k12.com")
     submitted = st.form_submit_button("Start Analysis")
-    headless = st.checkbox("Headless mode", value=True)
+    headless = st.checkbox("Headless mode", value=True,
+                           help="If you are running in local machine you can uncheck this option to see the browser")
 
 # state = {
 #     "website": "https://www.k12.com",
@@ -177,10 +178,13 @@ if submitted:
             folder_id="15sY21eZwH8ycxHFzfAQZucbL7W5obdYm",
         )
 
-        replace_slides_elements(reqs=requests_arr, new_slides_id=new_slides.get("id"))
+        replace_slides_elements(
+            reqs=requests_arr, new_slides_id=new_slides.get("id"))
 
-        slides_url = "https://docs.google.com/presentation/d/" + new_slides.get("id")
-        st.subheader(f"🔥 Your customized sales deck for {state['company_name']}")
+        slides_url = "https://docs.google.com/presentation/d/" + \
+            new_slides.get("id")
+        st.subheader(
+            f"🔥 Your customized sales deck for {state['company_name']}")
         st.write("Your deck is ready! 🎉, let's close the deal")
         st.link_button(
             "👀 Go to deck", slides_url, use_container_width=True, type="primary"
