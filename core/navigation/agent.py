@@ -5,7 +5,7 @@ from core.navigation.llm import send_message, gen_element_finder_prompt, gen_inf
 import json
 
 
-async def navigate_website(url: str, id: str):
+async def navigate_website(url: str, id: str, headless = True):
     ocr_service = GoogleVisionOCRService(st.secrets['gcp_service_account'])
     tarsier = Tarsier(ocr_service)
     tag_to_xpath = {}
@@ -19,7 +19,7 @@ async def navigate_website(url: str, id: str):
     state['logo'] = "https://www.k12.com/wp-content/themes/pl-scaffold-theme/dist/images/logo_new.svg"
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)
+        browser = await p.chromium.launch(headless=headless)
         page = await browser.new_page()
 
         async def extract_content() -> str:

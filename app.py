@@ -15,9 +15,6 @@ from core.slides.google_requests import (
 )
 from core.slides.utils import get_audio_prompt, get_requests_arr, get_text_prompt
 
-# Cloud support
-os.system("playwright install")
-
 st.set_page_config(layout="wide")
 ClarifaiStreamlitCSS.insert_default_css(st)
 
@@ -42,6 +39,7 @@ st.markdown(
 with st.form(key="analysis"):
     site_url = st.text_input("Site URL", value="https://www.k12.com")
     submitted = st.form_submit_button("Start Analysis")
+    headless = st.checkbox("Headless mode", value=True)
 
 # state = {
 #     "website": "https://www.k12.com",
@@ -67,7 +65,7 @@ with st.form(key="analysis"):
 if submitted:
     with st.spinner("Analyzing website"):
         id = site_url.split(".")[1]
-        state = asyncio.run(navigate_website(site_url, id))
+        state = asyncio.run(navigate_website(site_url, id, headless))
         st.header(f"🔍😎 Analysis of {state['website']}")
         col1, col2 = st.columns(2)
 
