@@ -1,6 +1,5 @@
 import streamlit as st
-import streamlit as st
-from core.navigation_agent import navigate_website
+from core.navigation.agent import navigate_website
 import asyncio
 
 st.title("Navigate page")
@@ -23,20 +22,14 @@ Your tasks are:
 with st.form(key="my_form"):
     url = st.text_input("Enter URL:", url)
     id = st.text_input("Enter ID:", id)
-    model = st.selectbox(
-        'Select your model',
-        ('gpt-3.5-turbo-1106', 'gpt-4-1106-preview', 'gpt-4'))
-    prompt = st.text_area("Enter prompt:", prompt, height=300)
+    # model = st.selectbox(
+    #     'Select your model',
+    #     ('gpt-3.5-turbo-1106', 'gpt-4-1106-preview', 'gpt-4'))
+    # prompt = st.text_area("Enter prompt:", prompt, height=300)
 
     submitted = st.form_submit_button("Generate Report")
 
 if submitted:
     with st.spinner("Loading"):
-        images = asyncio.run(navigate_website(url, id, model, prompt))
-        st.write(images)
-        st.header("Website")
-        st.image(images["web_screenshot"])
-        st.header("Search bar")
-        st.image(images["search_bar"])
-        st.header("Results")
-        st.image(images["results_screenshot"])
+        state = asyncio.run(navigate_website(url, id))
+        st.write(state)

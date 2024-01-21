@@ -10,7 +10,6 @@ import pandas as pd
 st.set_page_config(layout="wide")
 ClarifaiStreamlitCSS.insert_default_css(st)
 
-
 # This must be within the display() function.
 #auth = ClarifaiAuthHelper.from_streamlit(st)
 #stub = create_stub(auth)
@@ -28,9 +27,9 @@ st.title("New analysis")
 
 with st.form(key="analysis"):
     site_url = st.text_input(
-        "Site URL", value="https://samples.clarifai.com/metro-north.jpg"
+        "Site URL", value="https://www.k12.com"
     )
-    submitted = st.form_submit_button("Generate Report")
+    submitted = st.form_submit_button("Start Analysis")
 
 if submitted:
     with st.spinner("Extracting logo from site..."):
