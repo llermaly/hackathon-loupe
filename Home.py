@@ -1,4 +1,3 @@
-import ast
 import asyncio
 import json
 import os
@@ -14,10 +13,7 @@ from core.slides.google_requests import (
     replace_slides_elements,
     upload_file_to_drive,
 )
-from core.slides.utils import get_audio_prompt, get_requests_arr, get_text_prompt_arr
-
-# Cloud support
-os.system("playwright install")
+from core.slides.utils import get_audio_prompt, get_requests_arr, get_text_prompt
 
 st.set_page_config(layout="wide")
 ClarifaiStreamlitCSS.insert_default_css(st)
@@ -43,11 +39,6 @@ st.markdown(
 with st.form(key="analysis"):
     site_url = st.text_input("Site URL", value="https://www.k12.com")
     submitted = st.form_submit_button("Start Analysis")
-    headless = st.checkbox(
-        "Headless mode",
-        value=True,
-        help="If you are running in local machine you can uncheck this option to see the browser",
-    )
 
 # state = {
 #     "website": "https://www.k12.com",
@@ -73,17 +64,17 @@ with st.form(key="analysis"):
 if submitted:
     with st.spinner("Analyzing website"):
         id = site_url.split(".")[1]
-        state = asyncio.run(navigate_website(site_url, id, headless))
+        state = asyncio.run(navigate_website(site_url, id))
         st.header(f"🔍😎 Analysis of {state['website']}")
         col1, col2 = st.columns(2)
 
         with col1:
-            st.subheader("🏠 Main page")
+            st.subheader("🏠 Main pag")
             with st.container(height=350):
                 st.image(state["main_screenshot"], width=550)
 
         with col2:
-            st.subheader("📋 Summary")
+            st.subheader("📋 Summar")
             with st.container(height=350):
                 st.write(state["content"])
 
@@ -109,7 +100,7 @@ if submitted:
         styled_df = df.style.apply(highlight_rows, axis=1)
 
         with col1:
-            st.subheader("🚀 Search Results")
+            st.subheader("🚀 Search Result")
             with st.container(height=350):
                 st.image(state["results_screenshot"], width=500)
 
@@ -135,41 +126,32 @@ if submitted:
 
     with st.spinner("Generating slides"):
         # Text
-        text_prompt_arr = get_text_prompt_arr(state)
-
-        intro_text = get_analysis(text_prompt_arr[0], "GPT-4")
-        current_state_text = get_analysis(text_prompt_arr[1], "GPT-4")
-        problems = get_analysis(text_prompt_arr[2], "GPT-4")
-
         while True:
             try:
-                problems_arr = ast.literal_eval(problems)
+                text_prompt = get_text_prompt(state)
+                ai_data = get_analysis(text_prompt, "GPT-3_5-turbo")
 
-                if isinstance(problems_arr, list):
-                    break
-            except:
-                print("Error decoding problems array, trying again...")
+                print(ai_data)
 
-        conclusion_prompt = (
-            "Based on following data: "
-            + intro_text
-            + current_state_text
-            + problems_arr[0]
-            + problems_arr[1]
-            + problems_arr[2]
-            + text_prompt_arr[3]
-        )
+                ai_json_data = json.loads(ai_data.replace("'", '"'))
 
-        conclusion = get_analysis(conclusion_prompt, "GPT-4")
+                required_keys = [
+                    "intro_text",
+                    "current_state_text",
+                    "problems",
+                    "conclusion",
+                ]
 
-        ai_json_data = {
-            "intro_text": intro_text,
-            "current_state_text": current_state_text,
-            "problems": problems_arr,
-            "conclusion": conclusion,
-        }
+                if all(key in ai_json_data for key in required_keys):
+                    if (
+                        isinstance(ai_json_data["problems"], list)
+                        and len(ai_json_data["problems"]) == 3
+                    ):
+                        break
 
-        print(json.dumps(ai_json_data, indent=4))
+            except json.JSONDecodeError as e:
+                print(f"Error de decodificación JSON: {e}")
+                print("Intentando de nuevo...")
 
         # Images
         image_state_path = get_image(ai_json_data["current_state_text"])

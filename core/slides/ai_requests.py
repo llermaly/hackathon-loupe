@@ -13,15 +13,15 @@ PAT = os.environ["CLARIFAI_PAT"]
 
 def get_analysis(prompt, model):
     try:
-        inference_params = dict(
-            temperature=0.2
-        )
+        inference_params = dict(temperature=0.2)
 
         model_prediction = Model(
             f"https://clarifai.com/openai/chat-completion/models/{model}"
         ).predict_by_bytes(
             prompt.encode(), input_type="text", inference_params=inference_params
         )
+
+        print("Analysis generated!")
 
         return model_prediction.outputs[0].data.text.raw
     except Exception as e:
@@ -50,6 +50,7 @@ def get_image(prompt):
         with open(path, "wb") as f:
             f.write(output_base64)
 
+        print("Image generated!")
         return path
     except Exception as e:
         print("Error getting image: " + e)
@@ -96,5 +97,7 @@ def get_audio(prompt):
 
         with open(f"{directory}/audio.wav", "wb") as f:
             f.write(output_base64)
+
+        print("Audio generated!")
     except Exception as e:
         print("Error getting audio: " + e)

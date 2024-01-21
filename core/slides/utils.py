@@ -302,12 +302,59 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
     ]
 
 
-def get_text_prompt(json_data):
-    return (
-        "Based on the following information corresponding to the content of a web page:"
+def get_text_prompt_arr(json_data):
+    aux = (
+        "With the following information corresponding to the content of a web page:"
         + json_data["content"]
-        + ", analyze the search bar of the web page based on the text. The analysis will have the following sections:\n\nIntroduction: An introduction of 200 to 300 words summarizing the content of the website.\nCurrent State: Does it have a search bar? If it does, what do you consider the current state of the search bar on the analyzed site? If it doesn't, report that it does not have a search bar.\nProblems: What problems can you detect with the search bar if it exists? If it doesn't exist, also highlight the problems associated with not having one. These problems should be in list form.\nConclusion: Brief conclusions highlighting important analyzed elements. \n\nProvide me with the following information in JSON format: \n\n { 'intro_text': 'content', 'current_state_text': 'content', 'problems': ['problem1', 'problem2', 'problem3'], 'conclusion': 'content'} \n\n The JSON format is absolutely necessary to respect its structure; The JSON format must be compatible with the Python programming language; you must fill in each and every one of the required fields, and the answers must be only the data in JSON format. All the content must have a minimum of 200 and a maximum of 300 words."
+        + " Have search? "
+        + str(json_data["features"]["search"])
+        + " Have autocomplete? "
+        + str(json_data["features"]["autocomplete"])
+        + "Have description? "
+        + str(json_data["features"]["description"])
+        + "Have highlighting? "
+        + str(json_data["features"]["highlighting"])
+        + "Have thumbnails? "
+        + str(json_data["features"]["thumbnails"])
+        + "Have filters? "
+        + str(json_data["features"]["filters"])
+        + "Have sorting? "
+        + str(json_data["features"]["sorting"])
+        + "Have pagination? "
+        + str(json_data["features"]["pagination"])
+        + ", analyze the search bar of the web page based on the text. "
+        + ", analyze the search bar of the web page based on the text. "
     )
+
+    intro_text_prompt = (
+        aux
+        + " Give me an introduction of 75 to 100 words summarizing the content of the website."
+    )
+
+    current_state_text_prompt = (
+        aux
+        + " Does it have a search bar? If it does, what do you consider the current state of the search bar on the analyzed site? If it doesn't, report that it does not have a search bar."
+    )
+
+    problems_prompt = (
+        aux
+        + " What problems can you detect with the search bar if it exists? If it doesn't exist, also highlight the problems associated with not having one. These problems must be in python array form with 3 positions like this: ['problem1','problem2','problem3']. The response must be only the data on array format, please, don't include any other text."
+    )
+
+    conclusion_prompt = " Brief conclusions highlighting important analyzed elements about search bar. Should have 75 to 100 words."
+
+    return [
+        intro_text_prompt,
+        current_state_text_prompt,
+        problems_prompt,
+        conclusion_prompt,
+    ]
+
+    # return (
+    #     "Based on the following information corresponding to the content of a web page:"
+    #     + json_data["content"]
+    #     + ", analyze the search bar of the web page based on the text. The analysis will have the following sections:\n\nIntroduction: An introduction of 200 to 300 words summarizing the content of the website.\nCurrent State: Does it have a search bar? If it does, what do you consider the current state of the search bar on the analyzed site? If it doesn't, report that it does not have a search bar.\nProblems: What problems can you detect with the search bar if it exists? If it doesn't exist, also highlight the problems associated with not having one. These problems should be in list form.\nConclusion: Brief conclusions highlighting important analyzed elements. \n\nProvide me with the following information in JSON format: \n\n { 'intro_text': 'content', 'current_state_text': 'content', 'problems': ['problem1', 'problem2', 'problem3'], 'conclusion': 'content'} \n\n The JSON format is absolutely necessary to respect its structure; The JSON format must be compatible with the Python programming language; you must fill in each and every one of the required fields, and the answers must be only the data in JSON format. All the content must have a minimum of 200 and a maximum of 300 words."
+    # )
 
 
 def get_audio_prompt(json_data):
