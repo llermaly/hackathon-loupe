@@ -133,3 +133,4 @@ secrets.toml
 
 tmp
 data/*
+.DS_Store
