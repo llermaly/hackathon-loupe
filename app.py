@@ -15,6 +15,9 @@ from core.slides.google_requests import (
 )
 from core.slides.utils import get_audio_prompt, get_requests_arr, get_text_prompt
 
+# Cloud support
+os.system("playwright install")
+
 st.set_page_config(layout="wide")
 ClarifaiStreamlitCSS.insert_default_css(st)
 
