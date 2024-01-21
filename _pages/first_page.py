@@ -69,12 +69,12 @@ if submitted:
         col1, col2 = st.columns(2)
 
         with col1:
-            st.subheader("🏠 Main pag")
+            st.subheader("🏠 Main page")
             with st.container(height=350):
                 st.image(state["main_screenshot"], width=550)
 
         with col2:
-            st.subheader("📋 Summar")
+            st.subheader("📋 Summary")
             with st.container(height=350):
                 st.write(state["content"])
 
@@ -100,7 +100,7 @@ if submitted:
         styled_df = df.style.apply(highlight_rows, axis=1)
 
         with col1:
-            st.subheader("🚀 Search Result")
+            st.subheader("🚀 Search Results")
             with st.container(height=350):
                 st.image(state["results_screenshot"], width=500)
 

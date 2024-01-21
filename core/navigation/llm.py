@@ -59,17 +59,19 @@ Use JSON to answer the questions, following this schema:
 ONLY return a valid JSON object (no other text is necessary)
 """
 
+
 def gen_inference_params(img):
     """
     Generate inference params for the LLM, prepare image for gpt-vision
     """
     base64image = encode_and_resize(img)
 
-    inference_params = dict(temperature=0.1, max_tokens=100,
-                                    image_base64=base64image)
+    inference_params = dict(temperature=0.1,
+                            image_base64=base64image)
     return inference_params
 
-def send_message(prompt: str, inference_params, model_url = VISION_MODEL):
+
+def send_message(prompt: str, inference_params, model_url=VISION_MODEL):
     """
     Send a instruction to the chatbot and return the response
     """
