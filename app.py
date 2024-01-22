@@ -139,10 +139,10 @@ if submitted:
 
         intro_text = get_analysis(text_prompt_arr[0], "GPT-4")
         current_state_text = get_analysis(text_prompt_arr[1], "GPT-4")
-        problems = get_analysis(text_prompt_arr[2], "GPT-4")
 
         while True:
             try:
+                problems = get_analysis(text_prompt_arr[2], "GPT-4")
                 problems_arr = ast.literal_eval(problems)
 
                 if isinstance(problems_arr, list):

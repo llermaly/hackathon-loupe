@@ -350,12 +350,6 @@ def get_text_prompt_arr(json_data):
         conclusion_prompt,
     ]
 
-    # return (
-    #     "Based on the following information corresponding to the content of a web page:"
-    #     + json_data["content"]
-    #     + ", analyze the search bar of the web page based on the text. The analysis will have the following sections:\n\nIntroduction: An introduction of 200 to 300 words summarizing the content of the website.\nCurrent State: Does it have a search bar? If it does, what do you consider the current state of the search bar on the analyzed site? If it doesn't, report that it does not have a search bar.\nProblems: What problems can you detect with the search bar if it exists? If it doesn't exist, also highlight the problems associated with not having one. These problems should be in list form.\nConclusion: Brief conclusions highlighting important analyzed elements. \n\nProvide me with the following information in JSON format: \n\n { 'intro_text': 'content', 'current_state_text': 'content', 'problems': ['problem1', 'problem2', 'problem3'], 'conclusion': 'content'} \n\n The JSON format is absolutely necessary to respect its structure; The JSON format must be compatible with the Python programming language; you must fill in each and every one of the required fields, and the answers must be only the data in JSON format. All the content must have a minimum of 200 and a maximum of 300 words."
-    # )
-
 
 def get_audio_prompt(json_data):
     return (

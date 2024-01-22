@@ -51,6 +51,7 @@ def get_image(prompt):
             f.write(output_base64)
 
         print("Image generated!")
+
         return path
     except Exception as e:
         print("Error getting image: " + e)
@@ -99,5 +100,6 @@ def get_audio(prompt):
             f.write(output_base64)
 
         print("Audio generated!")
+
     except Exception as e:
         print("Error getting audio: " + e)
