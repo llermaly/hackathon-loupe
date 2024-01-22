@@ -6,39 +6,48 @@ from clarifai.client.model import Model
 from clarifai_grpc.channel.clarifai_channel import ClarifaiChannel
 from clarifai_grpc.grpc.api import resources_pb2, service_pb2, service_pb2_grpc
 from clarifai_grpc.grpc.api.status import status_code_pb2
+from llama_index.llms.clarifai import Clarifai
 
 os.environ["CLARIFAI_PAT"] = st.secrets["CLARIFAI_PAT"]
 PAT = os.environ["CLARIFAI_PAT"]
 
 
+def get_llm_response(prompt: str, inference_params, model_url):
+    llm_model = Clarifai(model_url=model_url)
+
+    llm_response = llm_model.complete(prompt=prompt, inference_params=inference_params)
+
+    return llm_response
+
+
 def get_analysis(prompt, model):
     try:
-        inference_params = dict(temperature=0.2)
-
-        model_prediction = Model(
-            f"https://clarifai.com/openai/chat-completion/models/{model}"
-        ).predict_by_bytes(
-            prompt.encode(), input_type="text", inference_params=inference_params
+        response = get_llm_response(
+            prompt=prompt,
+            inference_params=dict(temperature=0.2),
+            model_url=f"https://clarifai.com/openai/chat-completion/models/{model}",
         )
 
         print("Analysis generated!")
 
-        return model_prediction.outputs[0].data.text.raw
+        return str(response)
+
     except Exception as e:
-        print("Error getting analysis: " + e)
+        print("Error getting analysis: " + str(e))
 
 
 def get_image(prompt):
     try:
         inference_params = dict(quality="standard", size="1024x1024")
 
-        model_prediction = Model(
+        response = Model(
             "https://clarifai.com/openai/dall-e/models/dall-e-3"
         ).predict_by_bytes(
             prompt.encode(), input_type="text", inference_params=inference_params
         )
-
-        output_base64 = model_prediction.outputs[0].data.image.base64
+        # Save image to file
+        output_base64 = response.outputs[0].data.image.base64
+        print(type(output_base64))
 
         directory = "tmp"
         if not os.path.exists(directory):
@@ -54,7 +63,7 @@ def get_image(prompt):
 
         return path
     except Exception as e:
-        print("Error getting image: " + e)
+        print("Error getting image: " + str(e))
 
 
 def get_audio(prompt):
@@ -102,4 +111,4 @@ def get_audio(prompt):
         print("Audio generated!")
 
     except Exception as e:
-        print("Error getting audio: " + e)
+        print("Error getting audio: " + str(e))
