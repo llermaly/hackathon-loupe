@@ -3,6 +3,7 @@ from playwright.async_api import async_playwright
 from tarsier import Tarsier, GoogleVisionOCRService
 from core.navigation.llm import send_message, gen_element_finder_prompt, gen_inference_params, results_questions, json_schema
 import json
+from core.navigation.utils import extract_logo
 
 
 async def navigate_website(url: str, id: str, headless = True):
@@ -16,7 +17,7 @@ async def navigate_website(url: str, id: str, headless = True):
     state['company_name'] = id
 
     # TODO: Build function to extract logo
-    state['logo'] = "https://www.k12.com/wp-content/themes/pl-scaffold-theme/dist/images/logo_new.svg"
+    state['logo'] = extract_logo("https://www.k12.com/wp-content/themes/pl-scaffold-theme/dist/images/logo_new.svg")
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=headless)
