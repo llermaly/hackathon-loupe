@@ -1,4 +1,8 @@
+import os
 from datetime import datetime
+
+import cairosvg
+import requests
 
 
 def get_current_date():
@@ -22,7 +26,7 @@ def get_red_green(affirmation):
         return "https://drive.google.com/uc?export=download&id=154tYFve8p8lhVOPkKN3_GEJ3Zha7Ai1e"
 
 
-def get_requests_arr(ai_json_data, json_data, images_url_arr):
+def get_requests_arr(ai_json_data, json_data, images_urls):
     ### FIRST SLIDE ###
     company_name = {
         "replaceAllText": {
@@ -40,7 +44,7 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
 
     logo = {
         "replaceAllShapesWithImage": {
-            "imageUrl": json_data["logo"],
+            "imageUrl": images_urls["logo_image"],
             "replaceMethod": "CENTER_INSIDE",
             "containsText": {"text": "{{LOGO}}"},
         }
@@ -56,7 +60,7 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
 
     image_intro = {
         "replaceAllShapesWithImage": {
-            "imageUrl": images_url_arr[2],
+            "imageUrl": images_urls["results_screenshot"],
             "replaceMethod": "CENTER_INSIDE",
             "containsText": {"text": "{{IMAGE_INTRO}}"},
         }
@@ -72,7 +76,7 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
 
     image_state = {
         "replaceAllShapesWithImage": {
-            "imageUrl": images_url_arr[0],
+            "imageUrl": images_urls["current_state_image"],
             "replaceMethod": "CENTER_INSIDE",
             "containsText": {"text": "{{IMAGE_STATE}}"},
         }
@@ -260,7 +264,7 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
 
     image_conclusion = {
         "replaceAllShapesWithImage": {
-            "imageUrl": images_url_arr[1],
+            "imageUrl": images_urls["conclusion_image"],
             "replaceMethod": "CENTER_INSIDE",
             "containsText": {"text": "{{IMAGE_CONCLUSION}}"},
         }
@@ -269,7 +273,7 @@ def get_requests_arr(ai_json_data, json_data, images_url_arr):
     return [
         company_name,
         date,
-        # logo,
+        logo,
         intro_text,
         image_intro,
         current_state,
@@ -357,3 +361,57 @@ def get_audio_prompt(json_data):
         + json_data["company_name"]
         + ", after thoroughly analyzing your website, we've uncovered some information that may be of great interest to you. I've attached a detailed report for your review. Please take a moment to go through it. If you have any questions or would like further clarification, feel free to give me a call. Looking forward to discussing this with you. Thanks!"
     )
+
+
+def download_logo(url):
+    try:
+        response = requests.head(url)
+
+        if response.status_code == 200:
+            logo_type = response.headers.get("Content-Type", "").lower()
+
+            if not os.path.exists("tmp"):
+                os.makedirs("tmp")
+
+            location_path = "tmp/client_logo.png"
+
+            if "image/png" in logo_type:
+                download_png_logo(url, location_path)
+
+                return location_path
+            elif "image/svg" in logo_type:
+                download_svg_logo(url, location_path)
+
+                return location_path
+            else:
+                print(f"Type of content no compatible {url}: {logo_type}")
+
+                return None
+        else:
+            print(
+                f"Cannot get type of content {url}. Status code: {response.status_code}"
+            )
+    except Exception as e:
+        print(f"Request error: {e}")
+
+
+def download_png_logo(url, location_path):
+    try:
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            with open(location_path, "wb") as file:
+                file.write(response.content)
+                print("PNG logo downloaded")
+        else:
+            print(f"Cannot download logo. Status code: {response.status_code}")
+    except Exception as e:
+        print(f"Error downloading PNG logo: {e}")
+
+
+def download_svg_logo(url, location_path):
+    try:
+        cairosvg.svg2png(url=url, write_to=location_path)
+        print("SVG logo downloaded and converted to PNG")
+    except Exception as e:
+        print(f"Error downloading or converting SVG logo to PNG: {e}")

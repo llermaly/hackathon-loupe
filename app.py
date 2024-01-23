@@ -14,7 +14,12 @@ from core.slides.google_requests import (
     replace_slides_elements,
     upload_file_to_drive,
 )
-from core.slides.utils import get_audio_prompt, get_requests_arr, get_text_prompt_arr
+from core.slides.utils import (
+    download_logo,
+    get_audio_prompt,
+    get_requests_arr,
+    get_text_prompt_arr,
+)
 
 # Cloud support
 os.system("playwright install")
@@ -174,6 +179,7 @@ if submitted:
         # Images
         image_state_path = get_image(ai_json_data["current_state_text"])
         image_conclusion_path = get_image(ai_json_data["conclusion"])
+        logo_image_path = download_logo(state["logo"])
 
         images_path_arr = [
             image_state_path,
@@ -182,7 +188,18 @@ if submitted:
             state["results_screenshot"],
         ]
 
-        images_url_arr = []
+        if logo_image_path is not None:
+            images_path_arr.append(logo_image_path)
+
+        key_arr = [
+            "current_state_image",
+            "conclusion_image",
+            "main_screenshot",
+            "results_screenshot",
+            "logo_image",
+        ]
+
+        images_urls = {}
 
         for index, image_path in enumerate(images_path_arr):
             image_url = upload_file_to_drive(
@@ -192,12 +209,12 @@ if submitted:
                 "1zbX95IyVbxQO3ynhUqp0EjG5SEDq8LEE",
             )
 
-            images_url_arr.append(image_url)
+            images_urls[key_arr[index]] = image_url
 
         requests_arr = get_requests_arr(
             json_data=state,
             ai_json_data=ai_json_data,
-            images_url_arr=images_url_arr,
+            images_urls=images_urls,
         )
 
         new_slides = dup_slide(
